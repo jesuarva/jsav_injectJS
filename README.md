@@ -9,7 +9,12 @@ A Library that allows asynchronously load JS libraries. Then injects each resour
 * @param {String} library Relative path to a local library or URL to an external resource.
 * @param {Function} callback Function to be call after library injection.
 */
-var load = function (library, callback)
+var load = function (library, callback) {
+  return fetch(library)
+  .then(function (success){
+    return success.text();
+  });
+}
 ```
 
 ### loadAll()
@@ -20,7 +25,15 @@ var load = function (library, callback)
 * @param {Array} librariesArray An array of libraries to inject. Local libraries or external resources.
 * @param {Function} callback Function to be call after library injection.
 */
-var loadAll = function (librariesArray, callback)
+var loadAll = function (librariesArray, callback) {
+  console.log('jsav_ijs.load(), fucntion called');
+  fetchLibrary(library)
+  .then( function ( response ) {
+      injectJS(response);
+      callback(response);
+  })
+  .catch(fetchLibraryCatch);
+};
 ```
 
 
