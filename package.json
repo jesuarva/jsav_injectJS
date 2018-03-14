@@ -16,8 +16,10 @@
     "inject"
   ],
   "devDependencies": {
+    "bower": "^1.8.2",
     "grunt": "^1.0.2",
     "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-jasmine": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-less": "^1.4.1",
     "grunt-contrib-uglify": "^3.3.0",
