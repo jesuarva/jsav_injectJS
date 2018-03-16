@@ -7,9 +7,7 @@ window.jsav_ijs = (function(){
     // Create new <scritp> that'll be injected in DOM
     var newScript = document.createElement('script');
     // Add body to new <script>
-    // newScript.appendChild(document.createTextNode(scriptBody.txt));
     newScript.insertAdjacentHTML('beforeend', scriptBody);
-
     // Inject new <script> to DOM
     document.head.appendChild(newScript);
   }
@@ -31,8 +29,8 @@ window.jsav_ijs = (function(){
   * @param {String} error Whatever 'fetch' decides to throws
   */
   function fetchLibraryCatch (error) {
-    console.log('Upsss! seems that something went wrong fetching '+library);
-    console.log(reason);
+    console.log('Upsss! seems that something went wrong fetching a library');
+    console.log(error);
   }
 
   /**
@@ -42,6 +40,11 @@ window.jsav_ijs = (function(){
   */
   var load = function (library, callback) {
     console.log('jsav_ijs.load(), fucntion called');
+    if (typeof library != 'string') {
+      throw (new Error('Argument Library -> Must be a String.'));
+    } else if ( !(library.endsWith('.js')) ) {
+      throw (new Error('library to Fetch must be a Javascript file.'));
+    }
     fetchLibrary(library)
     .then( function ( response ) {
         injectJS(response);
