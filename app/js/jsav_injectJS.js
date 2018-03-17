@@ -1,24 +1,26 @@
 /*
  * "jsav_injectJS" by jesuarva: Jean Surkouf Ariza Varela.
  * A Library that allows asynchronously load JS libraries. Then injects each resource in the DOM by precedency.
- * Last update on Wed Mar 14 2018 15:16:50
+ * Last update on Sat Mar 17 2018 13:51:20
  * Licenses under MIT License
  */
 
 window.jsav_ijs = (function(){
   /**
   * Injector, this function injects a JS library in the DOM.
-  * @param {String} response The 'fetched' library's body.
+  * @param {String} scriptBody The 'fetched' library's body.
+  * @param {String} librayURL The library URI.
   */
-  function injectJS (scriptBody) {
+  function injectJS (scriptBody, libraryURI) {
     // Create new <scritp> that'll be injected in DOM
     var newScript = document.createElement('script');
+    newScript.id = String(libraryURI);
+    newScript.className = 'injectedScript';
     // Add body to new <script>
-    // newScript.appendChild(document.createTextNode(scriptBody.txt));
     newScript.insertAdjacentHTML('beforeend', scriptBody);
-
     // Inject new <script> to DOM
     document.head.appendChild(newScript);
+    console.log('Library injected');
   }
 
   /***
@@ -38,8 +40,8 @@ window.jsav_ijs = (function(){
   * @param {String} error Whatever 'fetch' decides to throws
   */
   function fetchLibraryCatch (error) {
-    console.log('Upsss! seems that something went wrong fetching '+library);
-    console.log(reason);
+    console.log('Upsss! seems that something went wrong fetching a library');
+    console.log(error);
   }
 
   /**
@@ -49,10 +51,15 @@ window.jsav_ijs = (function(){
   */
   var load = function (library, callback) {
     console.log('jsav_ijs.load(), fucntion called');
+    if (typeof library != 'string') {
+      throw (new Error('Argument Library -> Must be a String.'));
+    } else if ( !(library.endsWith('.js')) ) {
+      throw (new Error('library to Fetch must be a Javascript file.'));
+    }
     fetchLibrary(library)
     .then( function ( response ) {
-        injectJS(response);
-        callback(response);
+        injectJS(response, library);
+        callback();
     })
     .catch(fetchLibraryCatch);
   };
@@ -65,7 +72,20 @@ window.jsav_ijs = (function(){
   * @param {Function} callback Function to be call after library injection.
   */
   var loadAll = function (librariesArray, callback) {
-    console.log('jsav_ijs.loadAll(), function called');
+    console.log('jsav_ijs.loadAll(), function called.');
+
+    if(!Array.isArray(librariesArray)) {
+      throw ( new Error('Argument is not an Array. Pass your libraries by precedency into an Array.'));
+    } else {
+      // Items must be of String Array && JS files
+      librariesArray.forEach( function( item ) {
+        if (typeof item !== 'string') {
+          throw (new Error('Elements in the Array must be in Strings format. At least one element in the Array is not of String type.'));
+        } else if (!item.endsWith('.js')) {
+          throw (new Error('injectJS only fetch Javascript files. At least one of the elements in the Array is no a JS file.'));
+        }
+      });
+    }
 
     var thenables = [];
 
@@ -77,13 +97,17 @@ window.jsav_ijs = (function(){
     .then(function(responses){
       var count = 0;
       responses.forEach(function(response){
-        injectJS(response);
-        callback(response);
+        injectJS(response, librariesArray[count]);
         console.log('loadAll()  -->  LibrariesArray['+count+'] --> '+librariesArray[count]+' injected');
         count++;
       });
       console.log('All Libraies injected in the DOM');
-    });
+    })
+    .then(function(){
+      callback();
+      console.log("ALL LIBRARIES FETCHED && INJECTED");
+    })
+    .catch(fetchLibraryCatch);
   };
 
   return {

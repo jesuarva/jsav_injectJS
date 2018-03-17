@@ -26,8 +26,8 @@ module.exports = function(grunt) {
         },
         js: {
           files: {
-            // 'app/js/<%= pkg.name %>.min.js': ['<%= concat.js.dest %>']
-            'app/js/<%= pkg.name %>.min.js': ['<%= pkg.main %>']
+            'app/js/<%= pkg.name %>.min.js': ['<%= concat.js.dest %>']
+            // 'app/js/<%= pkg.name %>.min.js': ['<%= pkg.main %>']
           }
         }
       },
@@ -46,19 +46,6 @@ module.exports = function(grunt) {
         tasks: ['jshint']
       },
 
-      jasmine: {
-            test: {
-                src: 'src/**/*.js',
-                options: {
-                  vendor: [
-                          'bower_components/jquery/dist/jquery.js',
-                          'bower_components/jasmine-jquery/lib/jasmine-jquery.js'
-                          ],
-                  specs: 'src/**/*.jasmine.js'
-                }
-            }
-        }
-
    });
 
    // log something
@@ -76,5 +63,4 @@ module.exports = function(grunt) {
    // Default task(s).
    grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
    grunt.registerTask('concatuglify', ['concat', 'uglify']);
-   grunt.registerTask('jasmine', ['jasmine']);
 };
