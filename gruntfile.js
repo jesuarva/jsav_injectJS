@@ -26,8 +26,8 @@ module.exports = function(grunt) {
         },
         js: {
           files: {
-            // 'app/js/<%= pkg.name %>.min.js': ['<%= concat.js.dest %>']
-            'app/js/<%= pkg.name %>.min.js': ['<%= pkg.main %>']
+            'app/js/<%= pkg.name %>.min.js': ['<%= concat.js.dest %>']
+            // 'app/js/<%= pkg.name %>.min.js': ['<%= pkg.main %>']
           }
         }
       },
@@ -44,8 +44,7 @@ module.exports = function(grunt) {
       watch: {
         files: ['<%= jshint.files %>'],
         tasks: ['jshint']
-      }
-
+      },
 
    });
 
